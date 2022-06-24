@@ -1,3 +1,4 @@
+from urllib.parse import parse_qs, urlparse
 from bs4 import BeautifulSoup, SoupStrainer
 from datetime import datetime, date, timedelta
 from pathlib import Path
@@ -10,8 +11,8 @@ import pytz
 import random
 import requests
 import time
-import websockets
-
+import http.server
+import socketserver
 
 logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',
@@ -22,17 +23,23 @@ logger = logging.getLogger(__name__)
 
 
 try:
-    # Berlin.de requires the user agent to include your email
-    email = os.environ['BOOKING_TOOL_EMAIL']
+    PORT = int(os.environ['PORT'])
+    #PORT = 8080
 
+    # Berlin.de requires the user agent to include your email
+    #email = os.environ['BOOKING_TOOL_EMAIL']
+    email = 'mkysoft@gmail.com'
     # This allows Berlin.de to distinguish different people running the same tool
-    script_id = os.environ['BOOKING_TOOL_ID']
+    #script_id = os.environ['BOOKING_TOOL_ID']
+    script_id = 'mkysoft-dev'
 except KeyError:
     logger.exception("You must set the BOOKING_TOOL_EMAIL and BOOKING_TOOL_ID environment variables.")
 
 
 timezone = pytz.timezone('Europe/Berlin')
-appointments_url = 'https://service.berlin.de/terminvereinbarung/termin/tag.php?termin=1&anliegen[]=120686&dienstleisterlist=122210,122217,327316,122219,327312,122227,327314,122231,122243,327348,122252,329742,122260,329745,122262,329748,122254,329751,122271,327278,122273,327274,122277,327276,330436,122280,327294,122282,327290,122284,327292,327539,122291,327270,122285,327266,122286,327264,122296,327268,150230,329760,122301,327282,122297,327286,122294,327284,122312,329763,122314,329775,122304,327330,122311,327334,122309,327332,122281,327352,122279,329772,122276,327324,122274,327326,122267,329766,122246,327318,122251,327320,122257,327322,122208,327298,122226,327300&herkunft=http%3A%2F%2Fservice.berlin.de%2Fdienstleistung%2F120686%2F'
+appointments_url = {}
+appointments_url['anmeldung'] = 'https://service.berlin.de/terminvereinbarung/termin/tag.php?termin=1&anliegen[]=120686&dienstleisterlist=122210,122217,327316,122219,327312,122227,327314,122231,122243,327348,122252,329742,122260,329745,122262,329748,122254,329751,122271,327278,122273,327274,122277,327276,330436,122280,327294,122282,327290,122284,327292,327539,122291,327270,122285,327266,122286,327264,122296,327268,150230,329760,122301,327282,122297,327286,122294,327284,122312,329763,122314,329775,122304,327330,122311,327334,122309,327332,122281,327352,122279,329772,122276,327324,122274,327326,122267,329766,122246,327318,122251,327320,122257,327322,122208,327298,122226,327300&herkunft=http%3A%2F%2Fservice.berlin.de%2Fdienstleistung%2F120686%2F'
+appointments_url['aufenthaltserlaubnis'] = 'https://service.berlin.de/terminvereinbarung/termin/tag.php?termin=1&anliegen[]=324269&dienstleisterlist=122210,122217,122219,122227,122231,122238,122243,122252,122260,122262,122254,122271,122273,122277,122280,122282,122284,122291,122286,122296,150230,122301,122297,122294,122312,122314,122304,122311,122309,122281,122279,122276,122274,122267,122246,122251,122257,122208,122226&herkunft=http%3A%2F%2Fservice.berlin.de%2Fdienstleistung%2F324269%2Fen%2F'
 delay = 180  # Minimum allowed by Berlin.de's IKT-ZMS team
 
 
@@ -49,7 +56,7 @@ last_message = {
 }
 
 
-def get_appointments():
+def get_appointments(appointment_type):
     today = timezone.localize(datetime.now())
     next_month = timezone.localize(datetime(today.year, today.month % 12 + 1, 1))
     next_month_timestamp = int(next_month.timestamp())
@@ -58,14 +65,14 @@ def get_appointments():
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Upgrade-Insecure-Requests': '1',
-        'User-Agent': f"Mozilla/5.0 AppointmentBookingTool/1.1 (https://github.com/nicbou/burgeramt-appointments-websockets; {email}; {script_id})",
+        'User-Agent': f"Mozilla/5.0 AppointmentBookingTool/1.1 (https://github.com/mkysoft/berlin-burgeramt-appointments; {email}; {script_id})",
         'Accept-Language': 'en-gb',
         'Accept-Encoding': 'gzip, deflate',
         'Connection': 'keep-alive',
     }
 
     # Load the first two months
-    response_p1 = session.get(appointments_url, headers=headers)
+    response_p1 = session.get(appointments_url[appointment_type], headers=headers)
     response_p1.raise_for_status()
     time.sleep(1)
 
@@ -90,10 +97,10 @@ def parse_appointment_dates(page_content):
     return appointment_dates
 
 
-def look_for_appointments():
+def look_for_appointments(appointment_type):
     global delay
     try:
-        appointments = get_appointments()
+        appointments = get_appointments(appointment_type)
         delay = 180
         logger.info(f"Found {len(appointments)} appointments: {[datetime_to_json(d) for d in appointments]}")
         return {
@@ -101,7 +108,6 @@ def look_for_appointments():
             'status': 200,
             'message': None,
             'appointmentDates': [datetime_to_json(d) for d in appointments],
-            'connectedClients': len(connected_clients),
         }
     except requests.HTTPError as err:
         delay = 360
@@ -111,7 +117,6 @@ def look_for_appointments():
             'status': 502,
             'message': f'Could not fetch results from Berlin.de - Got HTTP {err.response.status_code}.',
             'appointmentDates': [],
-            'connectedClients': len(connected_clients),
         }
     except Exception as err:
         logger.exception("Could not fetch results due to an unexpected error.")
@@ -120,29 +125,34 @@ def look_for_appointments():
             'status': 500,
             'message': f'An unknown error occured: {str(err)}',
             'appointmentDates': [],
-            'connectedClients': len(connected_clients),
         }
 
+class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        # Sending an '200 OK' response
+        self.send_response(200)
 
-async def on_connect(websocket, path):
-    global last_message
-    connected_clients.append(websocket)
-    last_message['connectedClients'] = len(connected_clients)
-    try:
-        websockets.broadcast(connected_clients, json.dumps(last_message))
-        await websocket.wait_closed()
-    finally:
-        connected_clients.remove(websocket)
+        # Setting the header
+        self.send_header("Content-type", "text/html")
 
+        # Whenever using 'send_header', you also have to call 'end_headers'
+        self.end_headers()
 
-async def main():
-    global last_message
-    async with websockets.serve(on_connect, port=80):
-        while True:
-            last_message = look_for_appointments()
-            websockets.broadcast(connected_clients, json.dumps(last_message))
-            await asyncio.sleep(delay)
+        # Extract query param
+        appointment_type = 'aufenthaltserlaubnis'
+        query_components = parse_qs(urlparse(self.path).query)
+        if 'appointment_type' in query_components:
+            appointment_type = query_components["appointment_type"][0]
 
+        # Some custom HTML code, possibly generated by another function
+        html = look_for_appointments(appointment_type)
 
-if __name__ == "__main__":
-    asyncio.run(main())
+        # Writing the HTML contents with UTF-8
+        self.wfile.write(bytes(json.dumps(html), "utf8"))
+
+        return
+
+http_handler_object = HttpRequestHandler
+my_http_server = socketserver.TCPServer(("", PORT), http_handler_object)    
+# Star the server
+my_http_server.serve_forever()
