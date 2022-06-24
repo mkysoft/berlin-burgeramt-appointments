@@ -150,7 +150,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             appointment_type = query_components["appointment_type"][0]
             logger.info(f"Appointments requested for: '{appointment_type}'.")
             appoitments = look_for_appointments(appointment_type)
-            html += f"Time: {appoitments['time']} <br />"
             html += f"Stasus: {appoitments['status']} <br />"
             html += f"Message: {appoitments['message']} <br />"
             for appoitment_date in appoitments['appointmentDates']:
@@ -164,6 +163,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             html += '<br />'
             html += '<a href="?appointment_type=aufenthaltserlaubnis">Residence permit for a foreign child born in Germany - Issuance / Aufenthaltserlaubnis für im Bundesgebiet geborene Kinder - Erteilung</a>'        
 
+        html += "<p><a href=\"https://github.com/mkysoft/berlin-burgeramt-appointments\">source code</a></p"
         html += "</body>"
         html += "</html>"
 
