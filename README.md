@@ -7,7 +7,7 @@ This server looks for Bürgeramt appointment every few seconds, and serve the re
 - Residence permit for a foreign child born in Germany - Issuance / Aufenthaltserlaubnis für im Bundesgebiet geborene Kinder - Erteilung
 
 ## Setup
-
+Copy .env_template as .env and use your own values.
 ### Standalone
 
 1. Set the required environment variables:
@@ -28,6 +28,12 @@ The tool outputs the appointments it finds and the errors to the console, and se
 ### Heroku
 
 A heroku configuration is supplied with the repository.
+
+### Run heroku
+You can run the project in your local enviroment with below command.
+```
+heroku local
+```    
 
 ## Notes
 
