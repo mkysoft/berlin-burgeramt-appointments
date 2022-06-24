@@ -2,6 +2,10 @@
 
 This server looks for Bürgeramt appointment every few seconds, and serve the results via http. This project based on https://github.com/nicbou/burgeramt-appointments-websockets
 
+## Supported appointment
+- Anmeldung einer Wohnung / Registration of an apartment
+- Residence permit for a foreign child born in Germany - Issuance / Aufenthaltserlaubnis für im Bundesgebiet geborene Kinder - Erteilung
+
 ## Setup
 
 ### Standalone

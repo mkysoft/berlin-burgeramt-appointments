@@ -145,7 +145,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             html = json.dumps(look_for_appointments(appointment_type))
         else:
             logger.info('Homepage requested.')
-            html = '<a href="?appointment_type=anmeldung">Register at / Registration of an apartment</a>'
+            html = '<a href="?appointment_type=anmeldung">Anmeldung einer Wohnung / Registration of an apartment</a>'
             html += '<br />'
             html += '<a href="?appointment_type=aufenthaltserlaubnis">Residence permit for a foreign child born in Germany - Issuance / Aufenthaltserlaubnis für im Bundesgebiet geborene Kinder - Erteilung</a>'        
 
