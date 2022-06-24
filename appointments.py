@@ -105,6 +105,7 @@ def look_for_appointments(appointment_type):
             'status': 200,
             'message': None,
             'appointmentDates': [datetime_to_json(d) for d in appointments],
+            'link': appointments_url[appointment_type],
         }
     except requests.HTTPError as err:
         delay = 360
