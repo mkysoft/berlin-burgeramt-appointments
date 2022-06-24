@@ -1,6 +1,6 @@
 # Bürgeramt appointment finder
 
-This server looks for Bürgeramt appointment every few seconds, and broadcasts the results via websockets. This is the code behind All About Berlin's [Bürgeramt appointment finder](https://allaboutberlin.com/tools/appointment-finder)
+This server looks for Bürgeramt appointment every few seconds, and serve the results via http. This project based on https://github.com/nicbou/burgeramt-appointments-websockets
 
 ## Setup
 
@@ -8,6 +8,7 @@ This server looks for Bürgeramt appointment every few seconds, and broadcasts t
 
 1. Set the required environment variables:
     ```
+    export PORT=8080
     export BOOKING_TOOL_EMAIL=your@email.com
     export BOOKING_TOOL_ID=johnsmith-dev
     ```
@@ -18,11 +19,11 @@ This server looks for Bürgeramt appointment every few seconds, and broadcasts t
     python3 appointments.py
     ```
 
-The tool outputs the appointments it finds and the errors to the console, and broadcasts them with websockets.
+The tool outputs the appointments it finds and the errors to the console, and serve them with http.
 
-### Docker
+### Heroku
 
-A Dockerfile is supplied with the repository.
+A heroku configuration is supplied with the repository.
 
 ## Notes
 
