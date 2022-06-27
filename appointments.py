@@ -104,7 +104,7 @@ def look_for_appointments(appointment_type):
             'time': datetime_to_json(datetime.now()),
             'status': 200,
             'message': None,
-            'appointmentDates': [datetime_to_json(d) for d in appointments],
+            'appointmentDates': [d for d in appointments],
         }
     except requests.HTTPError as err:
         delay = 360
@@ -152,12 +152,12 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             appoitments = look_for_appointments(appointment_type)
             html += f"Stasus: {appoitments['status']} <br />"
             html += f"Message: {appoitments['message']} <br />"
-            last_date = None
+            last_date = datetime.max
             if 'last_date' in query_components:
-                last_date = query_components["last_date"][0]
+                last_date = datetime.fromisoformat(query_components["last_date"][0])
             for appoitment_date in appoitments['appointmentDates']:
-                if not last_date or appoitment_date < last_date: 
-                    html += f"Date: {appoitment_date} <br />"
+                if appoitment_date < last_date: 
+                    html += f"Date: {datetime_to_json(appoitment_date)} <br />"
             if len(appoitments['appointmentDates']):                    
                 html += f"<a href=\"{appointments_url[appointment_type]}\">Go</a>"
             #html = json.dumps(appoitments)
