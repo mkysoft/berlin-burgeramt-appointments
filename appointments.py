@@ -152,7 +152,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             appoitments = look_for_appointments(appointment_type)
             html += f"Stasus: {appoitments['status']} <br />"
             html += f"Message: {appoitments['message']} <br />"
-            last_date = timezone.localize(datetime.max)
+            last_date = timezone.localize(datetime.fromisoformat("2099-01-01"))
             if 'last_date' in query_components:
                 last_date = timezone.localize(datetime.fromisoformat(query_components["last_date"][0]))
             for appoitment_date in appoitments['appointmentDates']:
