@@ -152,9 +152,9 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             appoitments = look_for_appointments(appointment_type)
             html += f"Stasus: {appoitments['status']} <br />"
             html += f"Message: {appoitments['message']} <br />"
-            last_date = datetime.max
+            last_date = timezone.localize(datetime.max)
             if 'last_date' in query_components:
-                last_date = datetime.fromisoformat(query_components["last_date"][0])
+                last_date = timezone.localize(datetime.fromisoformat(query_components["last_date"][0]))
             for appoitment_date in appoitments['appointmentDates']:
                 if appoitment_date < last_date: 
                     html += f"Date: {datetime_to_json(appoitment_date)} <br />"
