@@ -152,8 +152,12 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             appoitments = look_for_appointments(appointment_type)
             html += f"Stasus: {appoitments['status']} <br />"
             html += f"Message: {appoitments['message']} <br />"
+            last_date = None
+            if 'last_date' in query_components:
+                last_date = query_components["last_date"][0]
             for appoitment_date in appoitments['appointmentDates']:
-                html += f"Date: {appoitment_date} <br />"
+                if not last_date or appoitment_date < last_date: 
+                    html += f"Date: {appoitment_date} <br />"
             if len(appoitments['appointmentDates']):                    
                 html += f"<a href=\"{appointments_url[appointment_type]}\">Go</a>"
             #html = json.dumps(appoitments)
