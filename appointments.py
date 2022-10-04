@@ -135,18 +135,20 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         # Whenever using 'send_header', you also have to call 'end_headers'
         self.end_headers()
+        
+        # Extract query param
+        appointment_type = 'aufenthaltserlaubnis'
+        query_components = parse_qs(urlparse(self.path).query)
+        
         html = "<!DOCTYPE html>"
         html += "<html lang='en'>"
         html += "<html>"
         html += "<head>"
-        html += "<title>Berlin bürgeramt appointment finder</title>"
+        html += "<title>Berlin bürgeramt appointment finder: " + appointment_type + "</title>"
         html += "<meta charset='utf-8'>"
         html += "</head>"
         html += "<body>"
 
-        # Extract query param
-        appointment_type = 'aufenthaltserlaubnis'
-        query_components = parse_qs(urlparse(self.path).query)
         if 'appointment_type' in query_components:
             appointment_type = query_components["appointment_type"][0]
             logger.info(f"Appointments requested for: '{appointment_type}'.")
