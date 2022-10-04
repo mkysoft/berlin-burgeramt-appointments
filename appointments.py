@@ -139,6 +139,9 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         # Extract query param
         appointment_type = 'aufenthaltserlaubnis'
         query_components = parse_qs(urlparse(self.path).query)
+        if 'appointment_type' in query_components:
+            appointment_type = query_components["appointment_type"][0]
+            logger.info(f"Appointments requested for: '{appointment_type}'.")
         
         html = "<!DOCTYPE html>"
         html += "<html lang='en'>"
@@ -150,8 +153,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         html += "<body>"
 
         if 'appointment_type' in query_components:
-            appointment_type = query_components["appointment_type"][0]
-            logger.info(f"Appointments requested for: '{appointment_type}'.")
             appoitments = look_for_appointments(appointment_type)
             html += f"Stasus: {appoitments['status']} <br />"
             html += f"Message: {appoitments['message']} <br />"
