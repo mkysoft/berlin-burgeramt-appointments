@@ -5,6 +5,7 @@ This server looks for Bürgeramt appointment every few seconds, and serve the re
 ## Supported appointment
 - Anmeldung einer Wohnung / Registration of an apartment
 - Residence permit for a foreign child born in Germany - Issuance / Aufenthaltserlaubnis für im Bundesgebiet geborene Kinder - Erteilung
+- Letter of commitment for a short stay / Verpflichtungserklärung für einen kurzen Aufenthalt Bearbeiten
 
 ## Setup
 Copy .env_template as .env and use your own values.
@@ -28,6 +29,11 @@ The tool outputs the appointments it finds and the errors to the console, and se
 ### Heroku
 
 A heroku configuration is supplied with the repository.
+#### Deploy
+    ```
+    heroku login
+    git push heroku main    
+    ```
 
 ### Run heroku
 You can run the project in your local enviroment with below command.
