@@ -193,6 +193,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         html += f"<img alt=\"\" border=\"0\" src=\"https://www.paypal.com/en_DE/i/scr/pixel.gif\" width=\"1\" height=\"1\" />"
         html += f"</form>"
         html += f"</p>"
+        html += f"<p>You can use this pages with page monitor tools for getting notification on your browser. For example you can use <a href=\"https://chrome.google.com/webstore/detail/page-monitor/ogeebjpdeabhncjpfhgdibjajcajepgg\" target=\"_blank\">Page Monitor</a> extension for the Chrome browser.</p>"
         html += "</body>"
         html += "</html>"
 
