@@ -164,7 +164,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     html += f"Date: {datetime_to_json(appoitment_date)} <br />"
             if len(appoitments['appointmentDates']) == 0:                    
                 html += f"There is no appoitment at he momment.<br />"
-            html += f"<a href=\"{appointments_url[appointment_type]}\"<p>Go</a> to original page.</p>"
+            html += f"<p><a href=\"{appointments_url[appointment_type]}\"Go</a> to original page.</p>"
             #html = json.dumps(appoitments)
         else:
             logger.info('Homepage requested.')
