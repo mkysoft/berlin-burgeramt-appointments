@@ -7,6 +7,9 @@ This server looks for Bürgeramt appointment every few seconds, and serve the re
 - Residence permit for a foreign child born in Germany - Issuance / Aufenthaltserlaubnis für im Bundesgebiet geborene Kinder - Erteilung
 - Letter of commitment for a short stay / Verpflichtungserklärung für einen kurzen Aufenthalt Bearbeiten
 
+## Live at
+https://berlin-burgeramt-appointments.herokuapp.com/
+
 ## Setup
 Copy .env_template as .env and use your own values.
 ### Standalone
@@ -27,8 +30,8 @@ Copy .env_template as .env and use your own values.
 The tool outputs the appointments it finds and the errors to the console, and serve them with http.
 
 ### Heroku
-
 A heroku configuration is supplied with the repository.
+
 #### Deploy
     ```
     heroku login
