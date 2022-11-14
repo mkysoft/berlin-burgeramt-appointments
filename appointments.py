@@ -157,14 +157,25 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             html += f"Stasus: {appoitments['status']} <br />"
             html += f"Message: {appoitments['message']} <br />"
             last_date = timezone.localize(datetime.fromisoformat("2099-01-01"))
+            last_date_str = ""
             if 'last_date' in query_components:
-                last_date = timezone.localize(datetime.fromisoformat(query_components["last_date"][0]))
+                last_date_str = query_components["last_date"][0]
+                last_date = timezone.localize(datetime.fromisoformat(last_date_str))
             for appoitment_date in appoitments['appointmentDates']:
                 if appoitment_date < last_date: 
                     html += f"Date: {datetime_to_json(appoitment_date)} <br />"
             if len(appoitments['appointmentDates']) == 0:                    
                 html += f"There is no appoitment at he momment.<br />"
-            html += f"<p><a href=\"{appointments_url[appointment_type]}\"Go</a> to original page.</p>"
+            html += f"<p>"
+            html += f"<form action=\"/\" method=\"get\" >"
+            html += f"<input type=\"hidden\" name=\"appointment_type\" value=\"{appointment_type}\" />"
+            html += f"<div style=\"display: inline-block\">"
+            html += f"<input type=\"date\" name=\"last_date\" value=\"{last_date_str}\" />"
+            html += f"<input type=\"submit\" value=\"Filter\" />"
+            html += f"</div>"
+            html += f"</form>"
+            html += f"</p>"
+            html += f"<p><a href=\"{appointments_url[appointment_type]}\">Go</a> to original page.</p>"
             #html = json.dumps(appoitments)
         else:
             logger.info('Homepage requested.')
