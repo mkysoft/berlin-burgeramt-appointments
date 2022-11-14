@@ -164,12 +164,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     html += f"Date: {datetime_to_json(appoitment_date)} <br />"
             if len(appoitments['appointmentDates']) == 0:                    
                 html += f"There is no appoitment at he momment.<br />"
-            html += f"<a href=\"{appointments_url[appointment_type]}\">Go</a> to original page.<br />"
-            html += f"<form action=\"https://www.paypal.com/donate\" method=\"post\" target=\"_top\">"
-            html += f"<input type=\"hidden\" name=\"hosted_button_id\" value=\"3XKHPCSKFXSLW\" />"
-            html += f"<input type=\"image\" src=\"https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif\" border=\"0\" name=\"submit\" title=\"PayPal - The safer, easier way to pay online!\" alt=\"Donate with PayPal button\" />"
-            html += f"<img alt=\"\" border=\"0\" src=\"https://www.paypal.com/en_DE/i/scr/pixel.gif\" width=\"1\" height=\"1\" />"
-            html += f"</form>"
+            html += f"<a href=\"{appointments_url[appointment_type]}\"<p>Go</a> to original page.</p>"
             #html = json.dumps(appoitments)
         else:
             logger.info('Homepage requested.')
@@ -179,7 +174,14 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             html += '<br />'
             html += '<a href="?appointment_type=verpflichtungserklarung">Letter of commitment for a short stay / Verpflichtungserklärung für einen kurzen Aufenthalt Bearbeiten</a>' 
 
-        html += "<p><a href=\"https://github.com/mkysoft/berlin-burgeramt-appointments\">source code</a></p"
+        html += f"<p><a href=\"https://github.com/mkysoft/berlin-burgeramt-appointments\">source code</a></p"
+        html += f"<p>"
+        html += f"<form action=\"https://www.paypal.com/donate\" method=\"post\" target=\"_top\">"
+        html += f"<input type=\"hidden\" name=\"hosted_button_id\" value=\"3XKHPCSKFXSLW\" />"
+        html += f"<input type=\"image\" src=\"https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif\" border=\"0\" name=\"submit\" title=\"PayPal - The safer, easier way to pay online!\" alt=\"Donate with PayPal button\" />"
+        html += f"<img alt=\"\" border=\"0\" src=\"https://www.paypal.com/en_DE/i/scr/pixel.gif\" width=\"1\" height=\"1\" />"
+        html += f"</form>"
+        html += f"</p>"
         html += "</body>"
         html += "</html>"
 
