@@ -13,6 +13,7 @@ import requests
 import time
 import http.server
 import socketserver
+import socket
 
 logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',
@@ -101,7 +102,7 @@ def look_for_appointments(appointment_type):
     try:
         appointments = get_appointments(appointment_type)
         delay = 180
-        logger.info(f"Found {len(appointments)} appointments: {[datetime_to_json(d) for d in appointments]}")
+        logger.info(f"Found {len(appointments)} {appointment_type} appointments: {[datetime_to_json(d) for d in appointments]}")
         return {
             'time': datetime_to_json(datetime.now()),
             'status': 200,
@@ -117,6 +118,15 @@ def look_for_appointments(appointment_type):
             'message': f'Could not fetch results from Berlin.de - Got HTTP {err.response.status_code}.',
             'appointmentDates': [],
         }
+    except (socket.timeout, socket.error, socket.gaierror) as err:
+        delay = 360
+        logger.warning(f"Got {err.response.status_code} error. Checking in {delay} seconds")
+        return {
+            'time': datetime_to_json(datetime.now()),
+            'status': 503,
+            'message': f'Could not fetch results from Berlin.de - Socket error {type(err)} HTTP Code {err.response.status_code}.',
+            'appointmentDates': [],
+        }        
     except Exception as err:
         logger.exception("Could not fetch results due to an unexpected error.")
         return {
