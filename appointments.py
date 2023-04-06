@@ -65,7 +65,7 @@ def get_appointments(appointment_type):
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Upgrade-Insecure-Requests': '1',
-        'User-Agent': f"Mozilla/5.0 AppointmentBookingTool/1.1 (https://github.com/mkysoft/berlin-burgeramt-appointments; {email}; {script_id})",
+        'User-Agent': f"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/111.0",
         'Accept-Language': 'en-gb',
         'Accept-Encoding': 'gzip, deflate',
         'Connection': 'keep-alive',
