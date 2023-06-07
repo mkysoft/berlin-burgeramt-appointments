@@ -14,6 +14,7 @@ import time
 import http.server
 import socketserver
 import socket
+import re
 
 logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S',
@@ -88,7 +89,7 @@ def get_appointments(appointment_type):
 
 
 def parse_appointment_dates(page_content):
-    appointment_strainer = SoupStrainer('a', title='An diesem Tag einen Termin buchen')
+    appointment_strainer = SoupStrainer('a', title = re.compile('An diesem Tag einen Termin buchen'))
     bookable_cells = BeautifulSoup(page_content, 'lxml', parse_only=appointment_strainer).find_all('a')
     appointment_dates = []
     for bookable_cell in bookable_cells:
@@ -187,7 +188,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             html += f"</div>"
             html += f"</form>"
             html += f"</p>"
-            html += f"<p><a href=\"{appointments_url[appointment_type]}\">Go</a> to original page.</p>"
+            html += f"<p><a href=\"{appointments_url[appointment_type]}\">Go</a> to original appoitment page.</p>"
             #html = json.dumps(appoitments)
         else:
             logger.info('Homepage requested.')
