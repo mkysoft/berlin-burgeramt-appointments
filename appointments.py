@@ -42,6 +42,7 @@ appointments_url['aufenthaltserlaubnis'] = 'https://service.berlin.de/terminvere
 appointments_url['verpflichtungserklarung'] = 'https://service.berlin.de/terminvereinbarung/termin/restart/?providerList=&requestList=120691&scopeId=3061&source=dldb'
 appointments_url['umschreibung'] = 'https://service.berlin.de/terminvereinbarung/termin/tag.php?termin=1&anliegen[]=121598&dienstleisterlist=122210,122217,122219,122227,122231,122238,122243,122254,122252,122260,122262,122271,122273,122277,122280,122282,122284,122291,122285,122286,122296,150230,122297,122294,122312,122314,122304,122311,122309,317869,122281,122279,122276,122274,122267,122246,122251,122257,122208,122226&herkunft=http%3A%2F%2Fservice.berlin.de%2Fdienstleistung%2F121598%2F'
 appointments_url['meldebescheinigung'] = 'https://service.berlin.de/terminvereinbarung/termin/tag.php?termin=1&anliegen[]=120702&dienstleisterlist=122210,122217,122219,122227,122231,122238,122243,122254,331011,349977,122252,122260,122262,122271,122273,122277,122280,122282,122284,122291,122285,122286,122296,150230,122301,122297,122294,122312,122314,122304,122311,122309,122281,122279,122283,122276,122274,122267,122246,122251,122257,122208,122226&herkunft=http%3A%2F%2Fservice.berlin.de%2Fdienstleistung%2F120702%2F'
+appointments_url['ubertragen'] = 'https://service.berlin.de/terminvereinbarung/termin/tag.php?termin=1&anliegen[]=121874&dienstleisterlist=122210,122217,122219,122227,122231,122238,122243,122254,331011,349977,122252,122260,122262,122271,122273,122277,122280,122282,122284,122291,122285,122286,122296,150230,122301,122297,122294,122312,122314,122304,122311,122309,122281,122279,122283,122276,122274,122267,122246,122251,122257,122208,122226&herkunft=http%3A%2F%2Fservice.berlin.de%2Fdienstleistung%2F121874%2F'
 delay = 180  # Minimum allowed by Berlin.de's IKT-ZMS team
 
 
@@ -201,6 +202,8 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             html += '<a href="?appointment_type=umschreibung">Driving license - transfer of a foreign driving license from a non-EU/EEA country (third country/Annex 11) / Fahrerlaubnis - Umschreibung einer ausländischen Fahrerlaubnis aus einem Nicht-EU/EWR-Land (Drittstaat/Anlage 11)</a>' 
             html += '<br />'
             html += '<a href="?appointment_type=meldebescheinigung">Request registration certificate / Meldebescheinigung beantragen</a>' 
+            html += '<br />'
+            html += '<a href="?appointment_type=ubertragen">Transfer of a residence permit to a new passport / Aufenthaltserlaubnis auf einen neuen Pass übertragen</a>' 
 
         html += f"<p><a href=\"https://github.com/mkysoft/berlin-burgeramt-appointments\">source code</a></p"
         html += f"<p>"
